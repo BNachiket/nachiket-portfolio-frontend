@@ -1,15 +1,19 @@
+
 import type { ContactPayload, Portfolio } from "@/types";
 
-// Set VITE_API_URL in .env.local or Vercel environment variables.
-const API_URL: string = (
-  (import.meta.env.VITE_API_URL as string | undefined) ??
-  "https://nachiket-portfolio-backend.onrender.com"
-).replace(/\/+$/, "");
+// Read the backend URL from frontend/.env.local
+const API_URL: string = (import.meta.env.VITE_API_URL ?? "").replace(/\/+$/, "");
 
-/** Loads portfolio content from the Spring Boot API. */
+/**
+ * Loads portfolio content from the Spring Boot API.
+ */
 export async function fetchPortfolio(
   signal?: AbortSignal
 ): Promise<Portfolio> {
+  if (!API_URL) {
+    throw new Error("VITE_API_URL is not configured.");
+  }
+
   const res = await fetch(`${API_URL}/api/portfolio`, { signal });
 
   if (!res.ok) {
@@ -19,12 +23,21 @@ export async function fetchPortfolio(
   return (await res.json()) as Portfolio;
 }
 
+/**
+ * Sends a contact form submission to the Spring Boot API.
+ */
 export async function sendContact(
   payload: ContactPayload
 ): Promise<void> {
+  if (!API_URL) {
+    throw new Error("VITE_API_URL is not configured.");
+  }
+
   const res = await fetch(`${API_URL}/api/contact`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify(payload),
   });
 
