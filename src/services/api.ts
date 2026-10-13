@@ -1,8 +1,8 @@
 
 import type { ContactPayload, Portfolio } from "@/types";
 
-// Read the backend URL from frontend/.env.local
-const API_URL: string = (import.meta.env.VITE_API_URL ?? "").replace(/\/+$/, "");
+// Backend URL configured in .env.local and Vercel environment variables.
+const API_URL = (import.meta.env.VITE_API_URL ?? "").replace(/\/+$/, "");
 
 /**
  * Loads portfolio content from the Spring Boot API.
